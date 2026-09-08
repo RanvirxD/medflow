@@ -9,6 +9,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ── Mongo connection (cached across serverless invocations) ─────────
+let mongoReady = null;
+function connectMongo() {
+  if (!mongoReady) {
+    mongoReady = mongoose
+      .connect(process.env.MONGO_URI)
+      .then(() => console.log("MongoDB connected"))
+      .catch((err) => {
+        console.error("MongoDB connection error:", err);
+        mongoReady = null; // allow retry on next request
+        throw err;
+      });
+  }
+  return mongoReady;
+}
+app.use((req, res, next) => {
+  connectMongo().then(() => next()).catch(next);
+});
+
 // ── Routes ──────────────────────────────────────────────────────────
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/patient", require("./routes/patient"));
@@ -29,16 +48,14 @@ app.use("/api/notifications", require("./routes/notification"));          // NEW
 // ── Health check ────────────────────────────────────────────────────
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
-// ── Start ───────────────────────────────────────────────────────────
+// ── Start (local dev only — Vercel invokes the exported app directly) ─
 const PORT = process.env.PORT || 5000;
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connected");
+if (!process.env.VERCEL) {
+  connectMongo().then(() => {
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
     });
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });          // ← was missing
+  });
+}
+
+module.exports = app;
