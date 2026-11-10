@@ -103,7 +103,16 @@ export default function AdminLoginPage() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-[#64748B]">
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setFormData({ email: "seedadmin@hdhi-seed.com", password: "admin123" })}
+                className="inline-flex items-center gap-2 text-sm text-[#0F172A] font-medium bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#CBD5E1] rounded-full px-4 py-1.5 transition-colors"
+              >
+                Fill demo credentials
+              </button>
+              <p className="text-sm text-[#64748B] mt-1">Email: seedadmin@hdhi-seed.com | Password: admin123</p>
+            </div>
+            <div className="mt-3 text-center text-sm text-[#64748B]">
               Don't have an account?{" "}
               <Link to="/admin/register" className="text-[#0F172A] font-medium hover:underline">Register</Link>
             </div>

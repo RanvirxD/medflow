@@ -103,7 +103,16 @@ export default function PatientLoginPage() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-[#64748B]">
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setFormData({ email: "patient1@gmail.com", password: "patient" })}
+                className="inline-flex items-center gap-2 text-sm text-[#2563EB] font-medium bg-[#EFF6FF] hover:bg-[#DBEAFE] border border-[#BFDBFE] rounded-full px-4 py-1.5 transition-colors"
+              >
+                Fill demo credentials
+              </button>
+              <p className="text-sm text-[#64748B] mt-1">Email: patient1@gmail.com | Password: patient</p>
+            </div>
+            <div className="mt-3 text-center text-sm text-[#64748B]">
               Don't have an account?{" "}
               <Link to="/patient/register" className="text-[#2563EB] font-medium hover:underline">Register</Link>
             </div>
